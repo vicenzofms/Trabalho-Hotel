@@ -30,12 +30,15 @@ void loadClientes(){
     if (file == NULL){
         return;
     }
-    int codigo = qntdClientes;
-    char * nome;
-    char * endereco;
+    int codigo = 0;
+    char nome[100];
+    char endereco[100];
     long telefone = 0;
-    while (fscanf(file, "%d|%s|%s|%ld", &codigo, &nome, &endereco, &telefone) != NULL){
-        printf("%d - %s - %s - %ld\n", codigo, nome, endereco, telefone);
+    while (1){
+        fscanf(file, "%d|%[^|]|%[^|]|%ld", &codigo, &nome, &endereco, &telefone);
+        if (feof(file)){ // verifica se acabou o arquivo
+            break;
+        }
         replaceUnderscore(&nome);
         replaceUnderscore(&endereco);
         struct Cliente cliente =  {
@@ -51,17 +54,21 @@ void loadClientes(){
 }
 
 int main(){
-    // loadClientes();
-    pausar();
-    int resp = 0;
+    loadClientes();
+    int resp = 8;
     do {
         resp = mainMenu();
         switch (resp) {
             case 1:
                 cadastrarCliente(file, &qntdClientes, &clientes);
+                pausar();
+            break;
+            case 2:
+                cadastrarFuncionario(file, &qntdFuncionarios, &funcionarios);
+                pausar();
             break;
             default:
-                printf("Nada aqui.\n");
+                printf("Saindo...");
         }
     } while (resp < 8);
     return 0;

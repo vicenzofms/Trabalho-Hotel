@@ -46,8 +46,10 @@ void pausar(){
     if (PAUSE == 1){
         system("pause");
     } else {
-        system( "read -n 1 -s -p \"Press any key to continue...\"; echo" );
+        // system( "read -n 1 -s -p \"Press any key to continue...\"; echo" );
         // system("read -p \"Pressione qualquer tecla para continuar...\"");
+        printf("Pressione ENTER para continuar...\n");
+        getchar();
     }
 }
 
@@ -89,8 +91,8 @@ int mainMenu(){
 
 void cadastrarCliente(FILE *file, int * qntdClientes, struct Cliente * clientes[]){
     int codigo = *qntdClientes;
-    char * nome;
-    char * endereco;
+    char nome[100];
+    char endereco[100];
     long telefone = 0;
     clearScreen();
     printf("Digite o nome do cliente: \n");
@@ -99,8 +101,8 @@ void cadastrarCliente(FILE *file, int * qntdClientes, struct Cliente * clientes[
     scanf(" %[^\n]s", &endereco); replaceSpace(&endereco);
     printf("Digite o telefone do cliente: \n");
     scanf("%ld", &telefone);
-
     file = fopen("clientes.txt", "a");
+    printf("Aberto!");
     if (file == NULL){
         printf("Nao foi possivel adicionar o cliente.\n");
         pausar();
@@ -112,5 +114,43 @@ void cadastrarCliente(FILE *file, int * qntdClientes, struct Cliente * clientes[
     struct Cliente cliente = {codigo, nome, endereco, telefone};
     *clientes[codigo] = cliente;
     *qntdClientes++;
-    pausar();
+    // pausar();
+}
+
+void cadastrarFuncionario(FILE *file, int * qntdFuncionarios, struct Funcionario * funcionarios[]){
+    int codigo = *qntdFuncionarios;
+    char nome[100];
+    long telefone = 0;
+    float salario = 0;
+    int cargo = 1;
+    clearScreen();
+    printf("Digite o nome do funcionario: \n");
+    scanf(" %[^\n]s", &nome); replaceSpace(&nome);
+    printf("Digite o telefone do cliente: \n");
+    scanf("%ld", &telefone);
+    printf("Digite o salario do cliente: \n");
+    scanf("%f", &salario);
+    do {
+        if (cargo < 1 || cargo > 4){
+            printf("Valor invalido! Digite novamente.\n");
+        }
+        printf("Digite o numero referente ao cargo:\n");
+        printf("\t[1] - Recepcionista\n");
+        printf("\t[2] - Auxiliar de Limpeza\n");
+        printf("\t[3] - Garcom\n");
+        printf("\t[4] - Gerente\n");
+        scanf("%d", &cargo);
+    } while (cargo < 1 || cargo > 4);
+    file = fopen("funcionarios.txt", "a");
+    if (file == NULL){
+        printf("Nao foi possivel adicionar o funcionario.\n");
+        pausar();
+        return;
+    }
+
+    fprintf(file, "%d|%s|%ld|%.2f|%d\n", codigo, nome, telefone, salario, cargo);
+    fclose(file);
+    struct Funcionario funcionario = {codigo, nome, telefone, cargo, salario};
+    *funcionarios[codigo] = funcionario;
+    *qntdFuncionarios++;
 }
