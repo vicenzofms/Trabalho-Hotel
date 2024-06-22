@@ -89,7 +89,7 @@ int mainMenu(){
     return resp;
 }
 
-void cadastrarCliente(FILE *file, int * qntdClientes, struct Cliente * clientes[]){
+void cadastrarCliente(FILE *file, int * qntdClientes, struct Cliente clientes[]){
     int codigo = *qntdClientes;
     char nome[100];
     char endereco[100];
@@ -109,15 +109,15 @@ void cadastrarCliente(FILE *file, int * qntdClientes, struct Cliente * clientes[
         return;
     }
 
-    fprintf(file, "%d|%s|%s|%ld\n", codigo, nome, endereco, telefone);
+    fprintf(file, "%d\t%s\t%s\t%ld\n", codigo, nome, endereco, telefone);
     fclose(file);
     struct Cliente cliente = {codigo, nome, endereco, telefone};
-    *clientes[codigo] = cliente;
+    // struct Cliente p = &cliente;
+    clientes[codigo] = cliente;
     *qntdClientes++;
-    // pausar();
 }
 
-void cadastrarFuncionario(FILE *file, int * qntdFuncionarios, struct Funcionario * funcionarios[]){
+void cadastrarFuncionario(FILE *file, int * qntdFuncionarios, struct Funcionario funcionarios[]){
     int codigo = *qntdFuncionarios;
     char nome[100];
     long telefone = 0;
@@ -148,9 +148,9 @@ void cadastrarFuncionario(FILE *file, int * qntdFuncionarios, struct Funcionario
         return;
     }
 
-    fprintf(file, "%d|%s|%ld|%.2f|%d\n", codigo, nome, telefone, salario, cargo);
+    fprintf(file, "%d\t%s\t%ld\t%.2f\t%d\n", codigo, nome, telefone, salario, cargo);
     fclose(file);
     struct Funcionario funcionario = {codigo, nome, telefone, cargo, salario};
-    *funcionarios[codigo] = funcionario;
+    funcionarios[codigo] = funcionario;
     *qntdFuncionarios++;
 }

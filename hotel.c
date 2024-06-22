@@ -35,7 +35,7 @@ void loadClientes(){
     char endereco[100];
     long telefone = 0;
     while (1){
-        fscanf(file, "%d|%[^|]|%[^|]|%ld", &codigo, &nome, &endereco, &telefone);
+        fscanf(file, "%d\t%s\t%s\t%ld", &codigo, &nome, &endereco, &telefone);
         if (feof(file)){ // verifica se acabou o arquivo
             break;
         }
@@ -52,20 +52,48 @@ void loadClientes(){
     }
     fclose(file);
 }
+void loadFuncionarios(){
+    file = fopen("funcionarios.txt", "r");
+    if (file == NULL){
+        return;
+    }
+    int codigo = 0;
+    char nome[100];
+    long telefone = 0;
+    float salario = 0;
+    int cargo = 0;
+    while (1){
+        fscanf(file, "%d\t%s\t%ld\t%f\t%d", &codigo, &nome, &telefone, &salario, &cargo);
+        if (feof(file)){ // verifica se acabou o arquivo
+            break;
+        }
+        replaceUnderscore(&nome);
+        struct Funcionario funcionario =  {
+            codigo,
+            nome,
+            telefone,
+            salario,
+            cargo
+        };
+        funcionarios[codigo] = funcionario;
+        qntdFuncionarios++;
+    }
+    fclose(file);
+}
 
 int main(){
     loadClientes();
-    int resp = 8;
+    loadFuncionarios();
+    int resp = 0;
     do {
         resp = mainMenu();
+        printf("Nome: %s\n", clientes[qntdClientes].nome);
         switch (resp) {
             case 1:
                 cadastrarCliente(file, &qntdClientes, &clientes);
-                pausar();
             break;
             case 2:
                 cadastrarFuncionario(file, &qntdFuncionarios, &funcionarios);
-                pausar();
             break;
             default:
                 printf("Saindo...");
