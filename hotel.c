@@ -9,13 +9,7 @@
 // Códigos de status de quarto
 #define OCUPADO 1
 #define DESOCUPADO 0
-// Códigos de cargo
-#define RECEPCIONISTA 1
-#define AUXILIAR_LIMPEZA 2
-#define GARCOM 3
-#define GERENTE 4
 
-FILE *file;
 struct Cliente clientes[MAX_CLIENTES];
 struct Funcionario funcionarios[MAX_FUNCIONARIOS];
 struct Estadia estadias[MAX_ESTADIAS];
@@ -26,74 +20,86 @@ int qntdFuncionarios = 0;
 int qntdEstadias = 0;
 
 void loadClientes(){
+    FILE * file;
     file = fopen("clientes.txt", "r");
     if (file == NULL){
         return;
     }
-    int codigo = 0;
-    char nome[100];
-    char endereco[100];
-    long telefone = 0;
     while (1){
-        fscanf(file, "%d\t%s\t%s\t%ld", &codigo, &nome, &endereco, &telefone);
+        char linha[1000];
+        fgets(linha, 1000, file);
         if (feof(file)){ // verifica se acabou o arquivo
             break;
         }
-        replaceUnderscore(&nome);
-        replaceUnderscore(&endereco);
-        struct Cliente cliente =  {
-            codigo,
-            nome,
-            endereco,
-            telefone
-        };
-        clientes[codigo] = cliente;
+        int cod = 0;
+        char n[100];
+        char end[150];
+        long tel = 0;
+        sscanf(linha, "%d\t%s\t%s\t%ld", &cod, &n, &end, &tel);
+        struct Cliente c;
+        c.codigo = cod;
+        c.telefone = tel;
+        replaceUnderscore(&n);
+        replaceUnderscore(&end);
+        strcpy(c.nome, n);
+        strcpy(c.endereco, end);
+        clientes[cod] = c;
         qntdClientes++;
     }
     fclose(file);
 }
 void loadFuncionarios(){
+    FILE * file;
     file = fopen("funcionarios.txt", "r");
     if (file == NULL){
         return;
     }
-    int codigo = 0;
-    char nome[100];
-    long telefone = 0;
-    float salario = 0;
-    int cargo = 0;
     while (1){
-        fscanf(file, "%d\t%s\t%ld\t%f\t%d", &codigo, &nome, &telefone, &salario, &cargo);
+        char linha[1000];
+        fgets(linha, 1000, file);
         if (feof(file)){ // verifica se acabou o arquivo
             break;
         }
-        replaceUnderscore(&nome);
-        struct Funcionario funcionario =  {
-            codigo,
-            nome,
-            telefone,
-            salario,
-            cargo
-        };
-        funcionarios[codigo] = funcionario;
+        int cod = 0;
+        char n[100];
+        long tel = 0;
+        float sal = 0;
+        int cargo = 0;
+        sscanf(linha, "%d\t%s\t%ld\t%f\t%d", &cod, &n, &tel, &sal, &cargo);
+        struct Funcionario f;
+        f.codigo = cod;
+        f.telefone = tel;
+        f.salario = sal;
+        f.cargo = cargo;
+        replaceUnderscore(&n);
+        strcpy(f.nome, n);
+        funcionarios[cod] = f;
         qntdFuncionarios++;
     }
     fclose(file);
 }
 
 int main(){
+    clearScreen();
     loadClientes();
     loadFuncionarios();
     int resp = 0;
+    FILE * file;
     do {
+        pausar();
         resp = mainMenu();
-        printf("Nome: %s\n", clientes[qntdClientes].nome);
         switch (resp) {
             case 1:
                 cadastrarCliente(file, &qntdClientes, &clientes);
             break;
             case 2:
                 cadastrarFuncionario(file, &qntdFuncionarios, &funcionarios);
+            break;
+            case 5: {
+                pesquisarCliente(&qntdClientes, &clientes);
+            break;}
+            case 6:
+                pesquisarFuncionario(&qntdFuncionarios, &funcionarios);
             break;
             default:
                 printf("Saindo...");
