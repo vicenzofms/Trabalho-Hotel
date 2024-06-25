@@ -2,15 +2,12 @@
 #include <stdlib.h>
 #include "hotel.h"
 // numeros maximos
-#define MAX_CLIENTES 100
+#define MAX_CLIENTES 1000
 #define MAX_QUARTOS 100
 #define MAX_ESTADIAS 1000
 #define MAX_FUNCIONARIOS 50
-// Códigos de status de quarto
-#define OCUPADO 1
-#define DESOCUPADO 0
 
-struct Cliente clientes[MAX_CLIENTES];
+struct Cliente clientes[MAX_CLIENTES]; 
 struct Funcionario funcionarios[MAX_FUNCIONARIOS];
 struct Estadia estadias[MAX_ESTADIAS];
 struct Quarto quartos[MAX_QUARTOS];
@@ -18,6 +15,7 @@ struct Quarto quartos[MAX_QUARTOS];
 int qntdClientes = 0;
 int qntdFuncionarios = 0;
 int qntdEstadias = 0;
+int qntdQuartos = 0;
 
 void loadClientes(){
     FILE * file;
@@ -79,10 +77,58 @@ void loadFuncionarios(){
     fclose(file);
 }
 
+void loadQuartos(){
+    FILE * file;
+    file = fopen("quartos.txt", "r");
+    if (file == NULL){
+        return;
+    }
+    while (1){
+        char linha[1000];
+        fgets(linha, 1000, file);
+        if (feof(file)){ // verifica se acabou o arquivo
+            break;
+        }
+        int numero = 0;
+        int qntdHospedes = 0;
+        float valorDiaria = 0;
+        sscanf(linha, "%d\t%d\t%f", &numero, &qntdHospedes, &valorDiaria);
+        struct Quarto q;
+        q.numero = numero;
+        q.qntdHospedes = qntdHospedes;
+        q.valorDiaria = valorDiaria;
+        quartos[qntdQuartos] = q;
+        qntdQuartos++;
+    }
+    fclose(file);
+}
+
+void loadEstadias(){
+    FILE * file;
+    file = fopen("estadias.txt", "r");
+    if (file == NULL){
+        return;
+    }
+    while (1){
+        char linha [1000];
+        fgets(linha, 1000, file);
+        if (feof(file)){
+            break;
+        }
+        struct Estadia e;
+        sscanf(linha, "%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d", &e.codigo, &e.codigoCliente, &e.numQuarto, &e.qntdDiarias, &e.qntdHospedes, &e.dataEntrada[0], &e.dataEntrada[1], &e.dataEntrada[2], &e.dataSaida[0], &e.dataSaida[1], &e.dataSaida[2], &e.isTerminada);
+        estadias[qntdEstadias] = e;
+        qntdEstadias++;
+    }
+    fclose(file);
+}
+
 int main(){
     clearScreen();
+    loadQuartos();
     loadClientes();
     loadFuncionarios();
+    loadEstadias();
     int resp = 0;
     FILE * file;
     do {
@@ -95,15 +141,27 @@ int main(){
             case 2:
                 cadastrarFuncionario(file, &qntdFuncionarios, &funcionarios);
             break;
-            case 5: {
+            case 3:
+                cadastrarEstadia(&qntdEstadias, qntdClientes, &estadias, qntdQuartos, &quartos);
+            break;
+            case 4:
+                cadastrarQuarto(&qntdQuartos, &quartos);
+            break;
+            case 5:
+                darBaixaEmEstadia(qntdEstadias, &estadias, qntdQuartos, &quartos);
+            break;
+            case 6: {
                 pesquisarCliente(&qntdClientes, &clientes);
             break;}
-            case 6:
+            case 7:
                 pesquisarFuncionario(&qntdFuncionarios, &funcionarios);
+            break;
+            case 8:
+                mostrarEstadiasCliente(qntdEstadias, &estadias, qntdClientes);
             break;
             default:
                 printf("Saindo...");
         }
-    } while (resp < 8);
+    } while (resp < 9);
     return 0;
 }
