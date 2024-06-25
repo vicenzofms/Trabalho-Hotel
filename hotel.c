@@ -136,10 +136,10 @@ int main(){
         resp = mainMenu();
         switch (resp) {
             case 1:
-                cadastrarCliente(file, &qntdClientes, &clientes);
+                cadastrarCliente(&qntdClientes, &clientes);
             break;
             case 2:
-                cadastrarFuncionario(file, &qntdFuncionarios, &funcionarios);
+                cadastrarFuncionario(&qntdFuncionarios, &funcionarios);
             break;
             case 3:
                 cadastrarEstadia(&qntdEstadias, qntdClientes, &estadias, qntdQuartos, &quartos);

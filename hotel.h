@@ -135,7 +135,7 @@ int mainMenu(){
     return resp;
 }
 
-void cadastrarCliente(FILE *file, int * qntdClientes, struct Cliente clientes[]){
+void cadastrarCliente(int * qntdClientes, struct Cliente clientes[]){
     int codigo = *qntdClientes;
     char nome[100];
     char endereco[100];
@@ -147,8 +147,8 @@ void cadastrarCliente(FILE *file, int * qntdClientes, struct Cliente clientes[])
     scanf(" %[^\n]s", &endereco); replaceSpace(&endereco);
     printf("Digite o telefone do cliente: \n");
     scanf("%ld", &telefone);
+    FILE * file;
     file = fopen("clientes.txt", "a");
-    printf("Aberto!");
     if (file == NULL){
         printf("Nao foi possivel adicionar o cliente.\n");
         return;
@@ -165,7 +165,7 @@ void cadastrarCliente(FILE *file, int * qntdClientes, struct Cliente clientes[])
     *qntdClientes++;
 }
 
-void cadastrarFuncionario(FILE *file, int * qntdFuncionarios, struct Funcionario funcionarios[]){
+void cadastrarFuncionario(int * qntdFuncionarios, struct Funcionario funcionarios[]){
     int codigo = *qntdFuncionarios;
     char nome[100];
     long telefone = 0;
@@ -190,6 +190,7 @@ void cadastrarFuncionario(FILE *file, int * qntdFuncionarios, struct Funcionario
         printf("\t[4] - Gerente\n");
         scanf("%d", &cargo);
     } while (cargo < 1 || cargo > 4);
+    FILE * file;
     file = fopen("funcionarios.txt", "a");
     if (file == NULL){
         printf("Nao foi possivel adicionar o funcionario.\n");
