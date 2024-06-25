@@ -135,7 +135,7 @@ int mainMenu(){
     return resp;
 }
 
-void cadastrarCliente(int * qntdClientes, struct Cliente clientes[]){
+void cadastrarCliente(int * qntdClientes, struct Cliente * clientes){
     int codigo = *qntdClientes;
     char nome[100];
     char endereco[100];
@@ -162,17 +162,16 @@ void cadastrarCliente(int * qntdClientes, struct Cliente clientes[]){
     strcpy(c.nome, nome);
     strcpy(c.endereco, endereco);
     clientes[codigo] = c;
-    *qntdClientes++;
+    *qntdClientes = *qntdClientes + 1;
 }
 
-void cadastrarFuncionario(int * qntdFuncionarios, struct Funcionario funcionarios[]){
+void cadastrarFuncionario(int * qntdFuncionarios, struct Funcionario * funcionarios){
     int codigo = *qntdFuncionarios;
     char nome[100];
     long telefone = 0;
     float salario = 0;
     int cargo = 1;
     clearScreen();
-    printf("%s\n", funcionarios[0].nome);
     printf("Digite o nome do funcionario: \n");
     scanf(" %[^\n]s", &nome); replaceSpace(&nome);
     printf("Digite o telefone do cliente: \n");
@@ -206,7 +205,7 @@ void cadastrarFuncionario(int * qntdFuncionarios, struct Funcionario funcionario
     f.cargo = cargo;
     strcpy(f.nome, nome);
     funcionarios[codigo] = f;
-    *qntdFuncionarios++;
+    *qntdFuncionarios = *qntdFuncionarios + 1;
 }
 
 int verificarNumQuarto(int n,int qntdQuartos, struct Quarto * quartos){
@@ -241,7 +240,7 @@ void cadastrarQuarto(int * qntdQuartos, struct Quarto * quartos){
         if (valorDiaria <= 0){
             printf("O valor da diaria deve ser maior que 0!\n");
         }
-        printf("Digite o valor da diaria: R$\n");
+        printf("Digite o valor da diaria: R$");
         scanf("%f", &valorDiaria);
     } while (valorDiaria <= 0);
     FILE * file;
@@ -256,14 +255,14 @@ void cadastrarQuarto(int * qntdQuartos, struct Quarto * quartos){
     q.qntdHospedes = qntdHospedes;
     q.valorDiaria = valorDiaria;
     quartos[*qntdQuartos] = q;
-    *qntdQuartos++;
+    *qntdQuartos = *qntdQuartos + 1;
     fclose(file);
 }
 
 void pesquisarFuncionario(int * qntdFuncionarios, struct Funcionario * funcionarios){
     clearScreen();
     printf("Deseja pesquisar o funcionario por: \n");
-    printf("\t [1] - Código\n");
+    printf("\t [1] - Codigo\n");
     printf("\t [2] - Nome\n");
     int opt = 1;
     do {
@@ -499,6 +498,8 @@ void cadastrarEstadia(int * qntdEstadias, int qntdClientes, struct Estadia * est
         return;
     }
     fprintf(file, "%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t0\n", e.codigo, e.codigoCliente, e.numQuarto, e.qntdDiarias, e.qntdHospedes, e.dataEntrada[0], e.dataEntrada[1], e.dataEntrada[2], e.dataSaida[0], e.dataSaida[1], e.dataSaida[2]);
+    estadias[e.codigo] = e;
+    *qntdEstadias = *qntdEstadias + 1;
     printf("Estadia cadastrada!\n");
     fclose(file);
 }
