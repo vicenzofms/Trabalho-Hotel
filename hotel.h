@@ -69,11 +69,11 @@ void pausar(){
     if (PAUSE == 1){
         system("pause");
     } else {
-        // system( "read -n 1 -s -p \"Press any key to continue...\"; echo" );
+        system( "read -n 1 -s -p \"Press any key to continue...\"; echo" );
         // system("read -p \"Pressione qualquer tecla para continuar...\"");
-        printf("Pressione ENTER para continuar...\n");
-        fflush(stdin);
-        getchar();
+        // printf("Pressione ENTER para continuar...\n");
+        // fflush(stdin);
+        // getchar();
     }
 }
 
