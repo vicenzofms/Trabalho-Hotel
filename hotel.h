@@ -139,14 +139,19 @@ void cadastrarCliente(int * qntdClientes, struct Cliente * clientes){
     int codigo = *qntdClientes;
     char nome[100];
     char endereco[100];
-    long telefone = 0;
+    long telefone = 1;
     clearScreen();
     printf("Digite o nome do cliente: \n");
     scanf(" %[^\n]s", &nome); replaceSpace(&nome);
     printf("Digite o endereco do cliente: \n");
     scanf(" %[^\n]s", &endereco); replaceSpace(&endereco);
-    printf("Digite o telefone do cliente: \n");
-    scanf("%ld", &telefone);
+    do {
+        if (telefone <= 0){
+            printf("O numero de telefone deve ser maior que 0\n");
+        }
+        printf("Digite o telefone do cliente: \n");
+        scanf("%ld", &telefone);
+    } while (telefone <= 0);
     FILE * file;
     file = fopen("clientes.txt", "a");
     if (file == NULL){
@@ -168,16 +173,26 @@ void cadastrarCliente(int * qntdClientes, struct Cliente * clientes){
 void cadastrarFuncionario(int * qntdFuncionarios, struct Funcionario * funcionarios){
     int codigo = *qntdFuncionarios;
     char nome[100];
-    long telefone = 0;
-    float salario = 0;
+    long telefone = 1;
+    float salario = 1;
     int cargo = 1;
     clearScreen();
     printf("Digite o nome do funcionario: \n");
     scanf(" %[^\n]s", &nome); replaceSpace(&nome);
-    printf("Digite o telefone do cliente: \n");
-    scanf("%ld", &telefone);
-    printf("Digite o salario do cliente: \n");
-    scanf("%f", &salario);
+    do {
+        if (telefone <= 0){
+            printf("O numero de telefone deve ser maior que 0\n");
+        }
+        printf("Digite o telefone do funcionario: \n");
+        scanf("%ld", &telefone);
+    } while (telefone <= 0);
+    do {
+        if (salario <= 0){
+            printf("O salario deve ser maior que 0!\n");
+        }
+        printf("Digite o salario do cliente: R$");
+        scanf("%f", &salario);
+    } while(salario <= 0);
     do {
         if (cargo < 1 || cargo > 4){
             printf("Valor invalido! Digite novamente.\n");
@@ -213,21 +228,21 @@ int verificarNumQuarto(int n,int qntdQuartos, struct Quarto * quartos){
         if (quartos[i].numero == n){
             return 0;
         }
-    }  
+    }
     return 1;
 }
 void cadastrarQuarto(int * qntdQuartos, struct Quarto * quartos){
     clearScreen();
     int num = 1; int disp = 1;
-    int qntdHospedes = 1; 
+    int qntdHospedes = 1;
     float valorDiaria = 1;
     do {
         if (num <= 0 || !disp){
-            printf("O numero digitado nao e valido\n"); 
+            printf("O numero digitado nao e valido\n");
         }
         printf("Digite o numero do quarto: ");
         scanf("%d", &num);
-        disp = verificarNumQuarto(num, *qntdQuartos, quartos); 
+        disp = verificarNumQuarto(num, *qntdQuartos, quartos);
     } while (!disp || num <= 0);
     do {
         if (qntdHospedes <= 0){
@@ -284,6 +299,7 @@ void pesquisarFuncionario(int * qntdFuncionarios, struct Funcionario * funcionar
         printf("-----------------\n");
         printf("Resultado da pesquisa:\n");
         // nome nao esta funcionando
+        printf("\tCodigo do funcionario: %d\n", codigo);
         printf("\tNome: %s\n", funcionarios[codigo].nome);
         printf("\tTelefone: %ld\n", funcionarios[codigo].telefone);
         printf("\tSalario: %.2f\n", funcionarios[codigo].salario);
@@ -298,6 +314,7 @@ void pesquisarFuncionario(int * qntdFuncionarios, struct Funcionario * funcionar
             if (strstr(funcionarios[i].nome, n)){
                 printf("-----------------\n");
                 printf("Resultado da pesquisa:\n");
+                printf("\tCodigo do funcionario: %d\n", i);
                 printf("\tNome: %s\n", funcionarios[i].nome);
                 printf("\tTelefone: %ld\n", funcionarios[i].telefone);
                 printf("\tSalario: %.2f\n", funcionarios[i].salario);
@@ -330,10 +347,13 @@ int pesquisarCliente(int * qntdClientes, struct Cliente * clientes){
             printf("Digite o código: ");
             scanf("%d", &codigo);
         } while (codigo < 0 || codigo >= *qntdClientes);
+        printf("-----------------\n");
         printf("Resultado da pesquisa:\n");
+        printf("\tCodigo do cliente: %d\n", codigo);
         printf("\tNome: %s\n", clientes[codigo].nome);
         printf("\tTelefone: %ld\n", clientes[codigo].telefone);
         printf("\tEndereco: %s\n", clientes[codigo].endereco);
+        printf("-----------------\n");
     } else {
         // pesquisa por nome
         char n[100];
@@ -343,6 +363,7 @@ int pesquisarCliente(int * qntdClientes, struct Cliente * clientes){
             if (strstr(clientes[i].nome, n)){
                 printf("-----------------\n");
                 printf("Resultado da pesquisa:\n");
+                printf("\tCodigo do cliente: %d\n", i);
                 printf("\tNome: %s\n", clientes[i].nome);
                 printf("\tTelefone: %ld\n", clientes[i].telefone);
                 printf("\tEndereco: %s\n", clientes[i].endereco);
@@ -413,7 +434,7 @@ int verificarDisponibilidadeQuarto(int dataEntrada, int dataSaida, int qntdEstad
         int dataSaidaEst = (estadias[i].dataSaida[2]*365 + diasDosMesesSaidaEst + estadias[i].dataSaida[0]);
         if (
             ((dataEntrada > dataEntradaEst && dataEntrada < dataSaidaEst) ||
-             (dataSaida > dataEntradaEst && dataSaida < dataSaidaEst)) || 
+             (dataSaida > dataEntradaEst && dataSaida < dataSaidaEst)) ||
             (dataEntrada < dataEntradaEst && dataSaida > dataSaidaEst)
         ){
             return 0;
@@ -449,12 +470,12 @@ void cadastrarEstadia(int * qntdEstadias, int qntdClientes, struct Estadia * est
     int d = 1, m = 1, a = 2000; // dia / mes / ano
     int dS = 1, mS = 1, aS = 2000; // dia / mes / ano
     do {
-        if (codCliente < 0 && codCliente >= qntdClientes){
+        if (codCliente < 0 || codCliente >= qntdClientes){
             printf("Esse codigo de cliente nao eh valido!\n");
         }
         printf("Digite o codigo do cliente: ");
         scanf("%d", &codCliente);
-    } while (codCliente < 0 && codCliente >= qntdClientes);
+    } while (codCliente < 0 || codCliente >= qntdClientes);
     do {
         if (qntdHospedes <= 0){
             printf("A quantidade de hospedes deve ser maior que 0!\n");
@@ -476,7 +497,7 @@ void cadastrarEstadia(int * qntdEstadias, int qntdClientes, struct Estadia * est
     for (int i = mS-1; i >= 1; i--){
         diasDosMesesSaida += getMAXdiaMes(i);
     }
-    e.qntdDiarias = (aS*365 + diasDosMesesSaida + dS)-(a*365 + diasDosMeses + d); 
+    e.qntdDiarias = (aS*365 + diasDosMesesSaida + dS)-(a*365 + diasDosMeses + d);
     e.dataEntrada[0] = d;
     e.dataEntrada[1] = m;
     e.dataEntrada[2] = a;
@@ -500,7 +521,7 @@ void cadastrarEstadia(int * qntdEstadias, int qntdClientes, struct Estadia * est
     fprintf(file, "%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t0\n", e.codigo, e.codigoCliente, e.numQuarto, e.qntdDiarias, e.qntdHospedes, e.dataEntrada[0], e.dataEntrada[1], e.dataEntrada[2], e.dataSaida[0], e.dataSaida[1], e.dataSaida[2]);
     estadias[e.codigo] = e;
     *qntdEstadias = *qntdEstadias + 1;
-    printf("Estadia cadastrada!\n");
+    printf("Estadia cadastrada! Quarto encontrado: %d\n", e.numQuarto);
     fclose(file);
 }
 
