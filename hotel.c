@@ -150,9 +150,9 @@ int main(){
             case 5:
                 darBaixaEmEstadia(qntdEstadias, &estadias, qntdQuartos, &quartos);
             break;
-            case 6: {
+            case 6: 
                 pesquisarCliente(&qntdClientes, &clientes);
-            break;}
+            break;
             case 7:
                 pesquisarFuncionario(&qntdFuncionarios, &funcionarios);
             break;

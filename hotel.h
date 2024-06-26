@@ -344,7 +344,7 @@ int pesquisarCliente(int * qntdClientes, struct Cliente * clientes){
             if (codigo < 0 || codigo >= *qntdClientes){
                 printf("Codigo nao existente. Digite novamente.\n");
             }
-            printf("Digite o código: ");
+            printf("Digite o codigo: ");
             scanf("%d", &codigo);
         } while (codigo < 0 || codigo >= *qntdClientes);
         printf("-----------------\n");
