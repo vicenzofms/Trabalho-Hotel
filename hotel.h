@@ -163,6 +163,8 @@ void cadastrarCliente(int * qntdClientes, struct Cliente * clientes){
     fclose(file);
     struct Cliente c;
     c.codigo = codigo;
+    replaceUnderscore(&nome);
+    replaceUnderscore(&endereco);
     c.telefone = telefone;
     strcpy(c.nome, nome);
     strcpy(c.endereco, endereco);
@@ -190,7 +192,7 @@ void cadastrarFuncionario(int * qntdFuncionarios, struct Funcionario * funcionar
         if (salario <= 0){
             printf("O salario deve ser maior que 0!\n");
         }
-        printf("Digite o salario do cliente: R$");
+        printf("Digite o salario do funcionario: R$");
         scanf("%f", &salario);
     } while(salario <= 0);
     do {
@@ -218,6 +220,7 @@ void cadastrarFuncionario(int * qntdFuncionarios, struct Funcionario * funcionar
     f.telefone = telefone;
     f.salario = salario;
     f.cargo = cargo;
+    replaceUnderscore(&nome);
     strcpy(f.nome, nome);
     funcionarios[codigo] = f;
     *qntdFuncionarios = *qntdFuncionarios + 1;
@@ -293,7 +296,7 @@ void pesquisarFuncionario(int * qntdFuncionarios, struct Funcionario * funcionar
             if (codigo < 0 || codigo >= *qntdFuncionarios){
                 printf("Codigo nao existente. Digite novamente.\n");
             }
-            printf("Digite o código: ");
+            printf("Digite o codigo: ");
             scanf("%d", &codigo);
         } while (codigo < 0 || codigo >= *qntdFuncionarios);
         printf("-----------------\n");
@@ -402,7 +405,7 @@ void pedirData(int * d, int * m, int * a, char * tipoDeData){
         } while (*a < 2000);
         do {
             if (*m < JANEIRO || *m > DEZEMBRO){
-                printf("Digite um numero de mes valido! (entre 1 e 12)");
+                printf("Digite um numero de mes valido! (entre 1 e 12)\n");
             }
             printf("Digite o mes (entre 1 e 12) da data de %s: ", tipoDeData);
             scanf("%d", m);
@@ -465,6 +468,7 @@ int acharQuartoLivre(int d, int m, int a, int dS, int mS, int aS, int qntdEstadi
 }
 
 void cadastrarEstadia(int * qntdEstadias, int qntdClientes, struct Estadia * estadias, int qntdQuartos, struct Quarto * quartos){
+    clearScreen();
     int codCliente = 0;
     int qntdHospedes = 1;
     int d = 1, m = 1, a = 2000; // dia / mes / ano
@@ -553,7 +557,7 @@ void darBaixaEmEstadia(int qntdEstadias, struct Estadia * estadias, int qntdQuar
     FILE * file;
     file = fopen("estadias.txt", "w");
     if (file == NULL){
-        printf("Ocorreu um erro! Tente novamente!");
+        printf("Ocorreu um erro! Tente novamente!\n");
         return;
     }
     for (int i = 0; i < qntdEstadias; i++){
